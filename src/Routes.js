@@ -3,12 +3,14 @@ import SplashScreen from './Interfaces/SplashScreen'
 import Subjects from './Interfaces/Subjects'
 import Questions from './Interfaces/Questions'
 import Score from './Interfaces/Score'
+import TotalScore from './Interfaces/TotalScore'
 
 export default createStackNavigator({
     SplashScreen,
     Subjects,
     Questions,
-    Score
+    Score,
+    TotalScore
 }, {
     navigationOptions: {
         headerStyle: {
