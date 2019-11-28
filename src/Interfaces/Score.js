@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Alert } from 'react-native'
 import firebase from '../config/firebase'
+import { HeaderBackButton } from 'react-navigation'
 
 export default class Score extends Component {
     constructor(props) {
@@ -11,15 +12,20 @@ export default class Score extends Component {
         }
     }
 
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: 'Score',
+            headerLeft:(<HeaderBackButton onPress={()=>{
+                navigation.navigate('Subjects')
+            }}/>)
+        }
+    }
+
     UNSAFE_componentWillMount() {
         this.setState({
             total_questions: this.props.navigation.state.params.total_questions,
             right_answers: this.props.navigation.state.params.right_answers
         })
-    }
-
-    static navigationOptions = {
-        title: 'Score'
     }
 
     sendScoreToDataBase() {
@@ -31,7 +37,6 @@ export default class Score extends Component {
         if (this.props.navigation.state.params.subject == "Matemática") {
             firebase.database().ref().once('value', function (snapshot) {
                 let data = snapshot.val()
-                console.log(snapshot.val())
                 if (data != undefined) {
                     let math_score = data.math_score
                     total_questions_db = math_score.total

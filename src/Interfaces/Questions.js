@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, FlatList, Alert } from 'react-native'
+import { HeaderBackButton } from 'react-navigation';
 
 let allQuestions = []
 let chosen_questions = []
 let chosen_wrong_answers = []
+
 let chosen_answers = []
 let right_answers = null
 let answer_pressed = null
@@ -14,7 +16,7 @@ function randomNumber(start, end) {
 
 export default class Questions extends Component {
     constructor(props) {
-        super(props)
+        super(props) 
         this.state = {
             question: 0,
             status: 0
@@ -29,7 +31,8 @@ export default class Questions extends Component {
 
     static navigationOptions = ({ navigation }) => {
         return {
-            title: navigation.getParam('title')
+            title: navigation.getParam('title'),
+            headerLeft:(<HeaderBackButton onPress={()=>{navigation.navigate('Subjects')}}/>)
         }
     }
 
@@ -110,7 +113,7 @@ export default class Questions extends Component {
             onPress={
                 () => {
                     this.verifyAnswer(item.id)
-                    setTimeout(() => { this.setState({ status: 0, question: this.state.question + 1 }) }, 1500)
+                    setTimeout(() => { this.setState({ status: 0, question: this.state.question + 1 }) }, 1000)
                 }
             }>
             <Text>
