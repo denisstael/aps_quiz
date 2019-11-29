@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text } from 'react-native'
+import { ImageBackground, StyleSheet } from 'react-native'
 
 export default class SplashScreen extends Component {
     performTimeConsumingTask = async () => {
@@ -25,9 +25,18 @@ export default class SplashScreen extends Component {
 
     render() {
         return (
-            <View>
-                <Text>Teste</Text>
-            </View>
+            <ImageBackground
+                source={require('../img/quiz_logo.png')}
+                style={styles.bg}>
+            </ImageBackground>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    bg: {
+        flex: 1,
+        width: null,
+        height: null
+    },
+})
