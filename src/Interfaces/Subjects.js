@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image, ImageBackground } from 'react-native'
 
 const db = require('../../db.json')
 
@@ -28,68 +28,78 @@ export default class Subjects extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <View style={styles.containerRow}>
+            <ImageBackground
+                imageStyle={{ opacity: 0.2 }}
+                source={require('../img/background_app.png')}
+                style={styles.bg}>
+                <View style={styles.container}>
                     <View style={styles.containerRow}>
-                        <View style={styles.containerColumn}>
-                            <Text>Matemática</Text>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.screenQuestions("Matemática", "Math")
-                                }}>
-                                <Image source={require('../img/math.png')} style={styles.img} />
-                            </TouchableOpacity>
+                        <View style={styles.containerRow}>
+                            <View style={styles.containerColumn}>
+                                <Text style={styles.txtTitle}>Matemática</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.screenQuestions("Matemática", "Math")
+                                    }}>
+                                    <Image source={require('../img/math.png')} style={styles.img} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={styles.containerRow}>
+                            <View style={styles.containerColumn}>
+                                <Text style={styles.txtTitle}>Português</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.screenQuestions("Português", "Portuguese")
+                                    }}>
+                                    <Image source={require('../img/portuguese.png')} style={styles.img} />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                    <View style={styles.containerRow}>
-                        <View style={styles.containerColumn}>
-                            <Text>Português</Text>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.screenQuestions("Português", "Portuguese")
-                                }}>
-                                <Image source={require('../img/portuguese.png')} style={styles.img} />
-                            </TouchableOpacity>
+                    <View style={styles.containerRow2}>
+                        <View style={styles.containerRow}>
+                            <View style={styles.containerColumn}>
+                                <Text style={styles.txtTitle}>História</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.screenQuestions("História", "History")
+                                    }}>
+                                    <Image source={require('../img/history.png')} style={styles.img} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={styles.containerRow}>
+                            <View style={styles.containerColumn}>
+                                <Text style={styles.txtTitle}>Geografia</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.screenQuestions("Geografia", "Geography")
+                                    }}>
+                                    <Image source={require('../img/geography.png')} style={styles.img} />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
+                    <TouchableOpacity
+                        style={styles.buttonScore}
+                        onPress={() => {
+                            this.props.navigation.navigate("TotalScore")
+                        }}>
+                        <Text>Ver Pontuação</Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.containerRow2}>
-                    <View style={styles.containerRow}>
-                        <View style={styles.containerColumn}>
-                            <Text>História</Text>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.screenQuestions("História", "History")
-                                }}>
-                                <Image source={require('../img/history.png')} style={styles.img} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.containerRow}>
-                        <View style={styles.containerColumn}>
-                            <Text>Geografia</Text>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.screenQuestions("Geografia", "Geography")
-                                }}>
-                                <Image source={require('../img/geography.png')} style={styles.img} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-                <TouchableOpacity
-                    style={styles.buttonScore}
-                    onPress={() => {
-                        this.props.navigation.navigate("TotalScore")
-                    }}>
-                    <Text>Ver Pontuação</Text>
-                </TouchableOpacity>
-            </View>
+            </ImageBackground>
         )
     }
 }
 
 const styles = StyleSheet.create({
+    bg: {
+        flex: 1,
+        width: null,
+        height: null,
+    },
     container: {
         flex: 1,
     },
@@ -125,5 +135,11 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#9899ff',
         margin: 10
+    },
+    txtTitle: {
+        fontSize: 18,
+        padding: 10,
+        borderRadius: 10,
+        fontWeight: 'bold'
     }
 })

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, FlatList, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, ImageBackground, StyleSheet } from 'react-native'
 import { HeaderBackButton } from 'react-navigation';
 
 let allQuestions = []
@@ -10,13 +10,15 @@ let chosen_answers = []
 let right_answers = null
 let answer_pressed = null
 
+let image_background = null
+
 function randomNumber(start, end) {
     return Math.floor(Math.random() * end) + start
 }
 
 export default class Questions extends Component {
     constructor(props) {
-        super(props) 
+        super(props)
         this.state = {
             question: 0,
             status: 0
@@ -25,14 +27,24 @@ export default class Questions extends Component {
 
     UNSAFE_componentWillMount() {
         allQuestions = this.props.navigation.state.params.data
+        subject = this.props.navigation.state.params.title
         right_answers = 0
         this.chooseQuestionsRandomly()
+        if (subject == 'Matemática') {
+            image_background = require('../img/math_background.png')
+        } else if (subject == 'Português') {
+            image_background = require('../img/portuguese_background.png')
+        } else if (subject == 'Geografia') {
+            image_background = require('../img/geography_background.png')
+        } else if (subject == 'História') {
+            image_background = require('../img/history_background.png')
+        }
     }
 
     static navigationOptions = ({ navigation }) => {
         return {
             title: navigation.getParam('title'),
-            headerLeft:(<HeaderBackButton onPress={()=>{navigation.navigate('Subjects')}}/>)
+            headerLeft: (<HeaderBackButton onPress={() => { navigation.navigate('Subjects') }} />)
         }
     }
 
@@ -107,19 +119,21 @@ export default class Questions extends Component {
     }
 
     renderAlternatives = ({ item }) => (
-        <TouchableOpacity disabled={this.state.status != 0}
-            style={this.state.status == 1 && item.id == answer_pressed ? {backgroundColor: 'green'} :
-             this.state.status == -1 && item.id == answer_pressed ? {backgroundColor: 'red'} : null}
-            onPress={
-                () => {
-                    this.verifyAnswer(item.id)
-                    setTimeout(() => { this.setState({ status: 0, question: this.state.question + 1 }) }, 1000)
-                }
-            }>
-            <Text>
-                {item.answer}
-            </Text>
-        </TouchableOpacity>
+        <View>
+            <TouchableOpacity disabled={this.state.status != 0}
+                style={this.state.status == 1 && item.id == answer_pressed ? styles.buttonRight :
+                    this.state.status == -1 && item.id == answer_pressed ? styles.buttonWrong : styles.containerButton}
+                onPress={
+                    () => {
+                        this.verifyAnswer(item.id)
+                        setTimeout(() => { this.setState({ status: 0, question: this.state.question + 1 }) }, 1000)
+                    }
+                }>
+                <Text>
+                    {item.answer}
+                </Text>
+            </TouchableOpacity>
+        </View>
     )
 
     renderQuestion() {
@@ -129,17 +143,28 @@ export default class Questions extends Component {
                 this.chooseWrongAnswersRandomly(question)
                 this.mountAnswers(question)
             }
-            
+
             return (
-                <View>
-                    <Text>
-                        {question.question.description}
-                    </Text>
-                    <FlatList
-                        data={chosen_answers}
-                        keyExtractor={item => item.id.toString()}
-                        renderItem={this.renderAlternatives}
-                    />
+                <View style={styles.container}>
+                    <View style={styles.containerQuestion}>
+                        <Text style={styles.txtQuestion}>
+                            {question.question.description}
+                        </Text>
+                    </View>
+                    <View style={styles.containerResult}>
+                        <Text>
+                            teste
+                        </Text>
+                    </View>
+                    <View style={styles.bottom}>
+                        <View>
+                            <FlatList
+                                data={chosen_answers}
+                                keyExtractor={item => item.id.toString()}
+                                renderItem={this.renderAlternatives}
+                            />
+                        </View>
+                    </View>
                 </View>
             )
         } else {
@@ -149,10 +174,78 @@ export default class Questions extends Component {
 
     render() {
         return (
-            <View>
-                {this.renderQuestion()}
-            </View>
+            <ImageBackground
+            source={image_background}
+            imageStyle={{ opacity: 0.6 }}
+            style={styles.bg}>
+                <View style={styles.container}>{this.renderQuestion()}</View>
+            </ImageBackground>
         )
     }
 }
 
+const styles = StyleSheet.create({
+    bg: {
+        flex: 1,
+        width: null,
+        height: null,
+    },
+    container: {
+        flex: 1
+    },
+    containerResult: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    containerQuestion: {
+        backgroundColor: '#def7f7',
+        borderWidth: 2,
+        borderColor: '#5a52ee',
+        borderRadius: 10,
+        padding: 16,
+        margin: 10,
+        marginTop: 30,
+        height: 100,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    containerButton: {
+        backgroundColor: '#def7f7',
+        borderWidth: 2,
+        borderColor: '#5a52ee',
+        borderRadius: 10,
+        padding: 16,
+        margin: 10,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    buttonRight: {
+        borderWidth: 2,
+        borderColor: 'green',
+        borderRadius: 10,
+        padding: 16,
+        margin: 10,
+        backgroundColor: '#a3ffa4',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    buttonWrong: {
+        borderWidth: 2,
+        borderColor: 'red',
+        borderRadius: 10,
+        padding: 16,
+        margin: 10,
+        backgroundColor: '#ff7a7a',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    bottom: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        marginBottom: 30
+    },
+    txtQuestion: {
+        fontWeight: 'bold',
+        fontSize: 15
+    }
+})

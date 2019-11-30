@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, Alert, ImageBackground, StyleSheet } from 'react-native'
 import firebase from '../config/firebase'
 import { HeaderBackButton } from 'react-navigation'
 
@@ -14,10 +14,10 @@ export default class Score extends Component {
 
     static navigationOptions = ({ navigation }) => {
         return {
-            title: 'Score',
-            headerLeft:(<HeaderBackButton onPress={()=>{
+            title: 'Resultado',
+            headerLeft: (<HeaderBackButton onPress={() => {
                 navigation.navigate('Subjects')
-            }}/>)
+            }} />)
         }
     }
 
@@ -99,30 +99,63 @@ export default class Score extends Component {
                 })
             })
         }
+        // Alert.alert('Dados salvos com sucesso!')
+        this.props.navigation.navigate("Subjects")
     }
 
     render() {
         return (
-            <View>
-                <Text>
-                    Questões respondidas: {this.state.total_questions}
-                </Text>
-                <Text>
-                    Respostas corretas: {this.state.right_answers}
-                </Text>
-                <TouchableOpacity
-                    onPress={
-                        () => {
-                            this.sendScoreToDataBase()
-                            this.props.navigation.navigate("Subjects")
-                        }
-                    }>
+            <ImageBackground
+                imageStyle={{ opacity: 0.2 }}
+                source={require('../img/background_app.png')}
+                style={styles.bg}>
+                <View style={styles.container}>
                     <Text>
-                        Continuar
+                        Questões respondidas: {this.state.total_questions}
                     </Text>
-                </TouchableOpacity>
-            </View>
-
+                    <Text>
+                        Respostas corretas: {this.state.right_answers}
+                    </Text>
+                    <View style={styles.bottom}>
+                        <TouchableOpacity
+                            style={styles.buttonContinue}
+                            onPress={
+                                () => {
+                                    this.sendScoreToDataBase()
+                                    // this.props.navigation.navigate("Subjects")
+                                }
+                            }>
+                            <Text>
+                                Continuar
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </ImageBackground>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    bg: {
+        flex: 1,
+        width: null,
+        height: null,
+    },
+    container: {
+        flex: 1
+    },
+    buttonContinue: {
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 5,
+        height: 45,
+        borderRadius: 5,
+        backgroundColor: '#9899ff',
+        margin: 10
+    },
+    bottom: {
+        flex: 1,
+        justifyContent: 'flex-end'
+    },
+})
