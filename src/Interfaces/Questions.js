@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, FlatList, ImageBackground, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, ImageBackground, StyleSheet, Image } from 'react-native'
 import { HeaderBackButton } from 'react-navigation';
 
 let allQuestions = []
@@ -21,7 +21,8 @@ export default class Questions extends Component {
         super(props)
         this.state = {
             question: 0,
-            status: 0
+            status: 0,
+            time: 10
         }
     }
 
@@ -44,7 +45,7 @@ export default class Questions extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
             title: navigation.getParam('title'),
-            headerLeft: (<HeaderBackButton onPress={() => { navigation.navigate('Subjects') }} />)
+            headerLeft: (<HeaderBackButton tintColor={'#e0e0e0'} onPress={() => { navigation.navigate('Subjects') }} />)
         }
     }
 
@@ -54,7 +55,7 @@ export default class Questions extends Component {
         let numbers = []
         let questions = []
         while (numbers.length < 5) {
-            number = randomNumber(0, 14)
+            number = randomNumber(0, 15)
             if (!numbers.includes(number)) {
                 numbers.push(number)
                 questions.push(allQuestions[number])
@@ -69,7 +70,7 @@ export default class Questions extends Component {
         let numbers = []
         let answers = []
         while (numbers.length < 3) {
-            number = randomNumber(0, 6)
+            number = randomNumber(0, 7)
             if (!numbers.includes(number)) {
                 numbers.push(number)
                 answers.push(question.question.wrong_alternatives[number])
@@ -84,12 +85,14 @@ export default class Questions extends Component {
             if (idAnswer == 8) {
                 right_answers += 1
                 this.setState({
-                    status: 1
+                    status: 1,
+                    time: 11
                 })
             } else {
                 //wrong
                 this.setState({
-                    status: -1
+                    status: -1,
+                    time: 11
                 })
             }
         }
@@ -106,7 +109,7 @@ export default class Questions extends Component {
     mountAnswers(question) {
         chosen_answers = []
         let right_answer = question.question.right_alternative[0]
-        let position = randomNumber(0, 3)
+        let position = randomNumber(0, 4)
         let i = 0
         while (chosen_answers.length < 4) {
             if (chosen_answers.length == position) {
@@ -125,20 +128,57 @@ export default class Questions extends Component {
                     this.state.status == -1 && item.id == answer_pressed ? styles.buttonWrong : styles.containerButton}
                 onPress={
                     () => {
-                        this.verifyAnswer(item.id)
-                        setTimeout(() => { this.setState({ status: 0, question: this.state.question + 1 }) }, 1000)
+                        if (this.state.time <= 10 && this.state.time != 0) {
+                            this.verifyAnswer(item.id)
+                            setTimeout(() => { this.setState({ status: 0, question: this.state.question + 1 }) }, 1000)
+                        }
                     }
                 }>
-                <Text>
+                <Text style={styles.txtAnswer}>
                     {item.answer}
                 </Text>
             </TouchableOpacity>
         </View>
     )
 
+    renderResult() {
+        let image = null
+        if (this.state.status == 1 && this.state.time != 0) {
+            image = <Image style={{ width: 230, height: 40 }}
+                source={require('../img/correto.png')} />
+
+        } else if (this.state.status == -1 && this.state.time != 0) {
+            image = <Image style={{ width: 230, height: 40 }} source={require('../img/errado.png')} />
+        }
+        return image
+    }
+
+    renderTime() {
+        if (this.state.time > 0) {
+            setTimeout(
+                () => {
+                    this.setState({ time: this.state.time - 1 })
+                },
+                1000
+            )
+
+            return <Text style={{ color: '#8846f4', fontSize: 40 }}>{this.state.time}</Text>
+
+        } else if (this.state.time == 0) {
+            setTimeout(
+                () => {
+                    this.setState({ question: this.state.question + 1, time: 10 })
+                },
+                1000
+            )
+
+            return <Image style={{ width: 230, height: 80 }} source={require('../img/acabou_o_tempo.png')} />
+        }
+    }
+
     renderQuestion() {
         if (this.state.question < 5) {
-            if (this.state.status == 0) {
+            if (this.state.status == 0 && this.state.time == 10) {
                 question = chosen_questions[this.state.question]
                 this.chooseWrongAnswersRandomly(question)
                 this.mountAnswers(question)
@@ -152,17 +192,17 @@ export default class Questions extends Component {
                         </Text>
                     </View>
                     <View style={styles.containerResult}>
-                        <Text>
-                            teste
-                        </Text>
+                        {this.state.status == 0 ? this.renderTime() : this.renderResult()}
                     </View>
-                    <View style={styles.bottom}>
-                        <View>
-                            <FlatList
-                                data={chosen_answers}
-                                keyExtractor={item => item.id.toString()}
-                                renderItem={this.renderAlternatives}
-                            />
+                    <View style={{ flex: 4 }}>
+                        <View >
+                            <View>
+                                <FlatList
+                                    data={chosen_answers}
+                                    keyExtractor={item => item.id.toString()}
+                                    renderItem={this.renderAlternatives}
+                                />
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -175,9 +215,9 @@ export default class Questions extends Component {
     render() {
         return (
             <ImageBackground
-            source={image_background}
-            imageStyle={{ opacity: 0.6 }}
-            style={styles.bg}>
+                source={image_background}
+                imageStyle={{ opacity: 0.6 }}
+                style={styles.bg}>
                 <View style={styles.container}>{this.renderQuestion()}</View>
             </ImageBackground>
         )
@@ -193,10 +233,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    containerResult: {
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
     containerQuestion: {
         backgroundColor: '#def7f7',
         borderWidth: 2,
@@ -207,7 +243,8 @@ const styles = StyleSheet.create({
         marginTop: 30,
         height: 100,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        flex: 1
     },
     containerButton: {
         backgroundColor: '#def7f7',
@@ -218,6 +255,11 @@ const styles = StyleSheet.create({
         margin: 10,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    containerResult: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1
     },
     buttonRight: {
         borderWidth: 2,
@@ -239,13 +281,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    bottom: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        marginBottom: 30
-    },
     txtQuestion: {
+        textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: 15
+        fontSize: 17,
+        color: '#8846f4'
+    },
+    txtAnswer: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#8846f4'
     }
 })

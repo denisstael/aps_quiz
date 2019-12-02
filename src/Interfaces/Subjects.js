@@ -86,7 +86,7 @@ export default class Subjects extends Component {
                         onPress={() => {
                             this.props.navigation.navigate("TotalScore")
                         }}>
-                        <Text>Ver Pontuação</Text>
+                        <Text style={styles.txtButton}>Ver Pontuação</Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
@@ -139,7 +139,12 @@ const styles = StyleSheet.create({
     txtTitle: {
         fontSize: 18,
         padding: 10,
-        borderRadius: 10,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: '#8846f4'
+    },
+    txtButton: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#e0e0e0'
     }
 })

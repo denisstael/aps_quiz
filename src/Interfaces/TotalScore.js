@@ -27,7 +27,7 @@ export default class TotalScore extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
             title: 'Score',
-            headerLeft: (<HeaderBackButton onPress={() => { navigation.navigate('Subjects') }} />)
+            headerLeft: (<HeaderBackButton tintColor={'#e0e0e0'} onPress={() => { navigation.navigate('Subjects') }} />)
         }
     }
 
@@ -224,7 +224,7 @@ export default class TotalScore extends Component {
                             onPress={() => {
                                 this.props.navigation.navigate("Subjects")
                             }}>
-                            <Text>Voltar</Text>
+                            <Text style={styles.txtButton}>Voltar</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.bottom}>
@@ -235,9 +235,9 @@ export default class TotalScore extends Component {
                                     this.resetScore()
                                 }
                             }>
-                            <Text>
+                            <Text style={styles.txtButton}>
                                 Zerar Score
-                    </Text>
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -252,7 +252,8 @@ export default class TotalScore extends Component {
         } else {
             scoreData = <View style={styles.container}>
                 <View style={styles.containerRow}>
-                    <Text style={{ fontSize: 30, backgroundColor: '#def7f7', padding: 10, borderRadius: 10 }}>
+                    <Text style={{ color: '#8846f4',fontSize: 30, backgroundColor: '#def7f7',
+                     padding: 10, borderRadius: 10 }}>
                         Carregando...
                         </Text>
                 </View>
@@ -297,7 +298,8 @@ const styles = StyleSheet.create({
     containerColumn2: {
         justifyContent: 'center',
         alignItems: 'center',
-        flex: 1
+        flex: 1,
+        marginRight: 20
     },
     containerRow3: {
         justifyContent: 'center',
@@ -326,17 +328,25 @@ const styles = StyleSheet.create({
     },
     txtWarning: {
         textAlign: 'center',
+        color: 'red'
     },
     txt: {
         textAlign: 'center',
-        fontSize: 18
+        fontSize: 18,
+        color: '#8846f4'
+    },
+    txtButton: {
+        fontSize: 15,
+        color: '#e0e0e0',
+        fontWeight: 'bold'
     },
     txtTitle: {
         textAlign: 'center',
         fontSize: 30,
         fontWeight: 'bold',
         margin: 5,
-    },
+        color: '#8846f4'
+    },  
     txtPercentageBad: {
         textAlign: 'center',
         fontSize: 30,

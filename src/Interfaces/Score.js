@@ -15,9 +15,9 @@ export default class Score extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
             title: 'Resultado',
-            headerLeft: (<HeaderBackButton onPress={() => {
+            headerLeft: (<HeaderBackButton tintColor={'#e0e0e0'} onPress={() => {
                 navigation.navigate('Subjects')
-            }} />)
+            }} style={{color: '#e0e0e0'}} />)
         }
     }
 
@@ -125,7 +125,7 @@ export default class Score extends Component {
                                     // this.props.navigation.navigate("Subjects")
                                 }
                             }>
-                            <Text>
+                            <Text style={styles.txtButton}>
                                 Continuar
                             </Text>
                         </TouchableOpacity>
@@ -158,4 +158,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end'
     },
+    txtButton: {
+        fontSize: 15,
+        color: '#e0e0e0',
+        fontWeight: 'bold'
+    }
 })
