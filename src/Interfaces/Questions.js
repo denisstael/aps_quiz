@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, FlatList, ImageBackground, StyleSheet, Image } from 'react-native'
-import { HeaderBackButton } from 'react-navigation';
 
 let allQuestions = []
 let chosen_questions = []
@@ -45,7 +44,7 @@ export default class Questions extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
             title: navigation.getParam('title'),
-            headerLeft: (<HeaderBackButton tintColor={'#e0e0e0'} onPress={() => { navigation.navigate('Subjects') }} />)
+            headerLeft: null
         }
     }
 

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Alert, ImageBackground, StyleSheet } from 'react-native'
 import firebase from '../config/firebase'
-import { HeaderBackButton } from 'react-navigation'
+
+let image = null
 
 export default class Score extends Component {
     constructor(props) {
@@ -15,9 +16,7 @@ export default class Score extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
             title: 'Resultado',
-            headerLeft: (<HeaderBackButton tintColor={'#e0e0e0'} onPress={() => {
-                navigation.navigate('Subjects')
-            }} style={{color: '#e0e0e0'}} />)
+            headerLeft: null
         }
     }
 
@@ -26,6 +25,15 @@ export default class Score extends Component {
             total_questions: this.props.navigation.state.params.total_questions,
             right_answers: this.props.navigation.state.params.right_answers
         })
+        if (this.props.navigation.state.params.subject == "Matemática") {
+            image = require('../img/math_score.png')
+        } else if (this.props.navigation.state.params.subject == "Português") {
+            image = require('../img/portuguese_score.png')
+        } else if (this.props.navigation.state.params.subject == "História") {
+            image = require('../img/history_score.png')
+        } else if (this.props.navigation.state.params.subject == "Geografia") {
+            image = require('../img/geography_score.png')
+        }
     }
 
     sendScoreToDataBase() {
@@ -35,7 +43,7 @@ export default class Score extends Component {
         let right_answers_db = 0
 
         if (this.props.navigation.state.params.subject == "Matemática") {
-            firebase.database().ref().once('value', function (snapshot) {
+            firebase.database().ref('Score/').once('value', function (snapshot) {
                 let data = snapshot.val()
                 if (data != undefined) {
                     let math_score = data.math_score
@@ -43,15 +51,17 @@ export default class Score extends Component {
                     right_answers_db = math_score.answers
                 }
             }).then(function () {
-                firebase.database().ref('math_score/').set({
+                firebase.database().ref('Score/math_score/').set({
                     total: total_questions + total_questions_db,
                     answers: right_answers + right_answers_db
                 }).catch((error) => {
                     Alert.alert('Erro!')
                 })
+            }).catch((error) => {
+                Alert.alert('Erro ao salvar os dados!')
             })
         } else if (this.props.navigation.state.params.subject == "Português") {
-            firebase.database().ref().once('value', function (snapshot) {
+            firebase.database().ref('Score/').once('value', function (snapshot) {
                 let data = snapshot.val()
                 if (data != undefined) {
                     let portuguese_score = data.portuguese_score
@@ -59,7 +69,7 @@ export default class Score extends Component {
                     right_answers_db = portuguese_score.answers
                 }
             }).then(function () {
-                firebase.database().ref('portuguese_score/').set({
+                firebase.database().ref('Score/portuguese_score/').set({
                     total: total_questions + total_questions_db,
                     answers: right_answers + right_answers_db
                 }).catch((error) => {
@@ -67,7 +77,7 @@ export default class Score extends Component {
                 })
             })
         } else if (this.props.navigation.state.params.subject == "História") {
-            firebase.database().ref().once('value', function (snapshot) {
+            firebase.database().ref('Score/').once('value', function (snapshot) {
                 let data = snapshot.val()
                 if (data != undefined) {
                     let history_score = data.history_score
@@ -75,7 +85,7 @@ export default class Score extends Component {
                     right_answers_db = history_score.answers
                 }
             }).then(function () {
-                firebase.database().ref('history_score/').set({
+                firebase.database().ref('Score/history_score/').set({
                     total: total_questions + total_questions_db,
                     answers: right_answers + right_answers_db
                 }).catch((error) => {
@@ -83,7 +93,7 @@ export default class Score extends Component {
                 })
             })
         } else if (this.props.navigation.state.params.subject == "Geografia") {
-            firebase.database().ref().once('value', function (snapshot) {
+            firebase.database().ref('Score/').once('value', function (snapshot) {
                 let data = snapshot.val()
                 if (data != undefined) {
                     let geography_score = data.geography_score
@@ -91,7 +101,7 @@ export default class Score extends Component {
                     right_answers_db = geography_score.answers
                 }
             }).then(function () {
-                firebase.database().ref('geography_score/').set({
+                firebase.database().ref('Score/geography_score/').set({
                     total: total_questions + total_questions_db,
                     answers: right_answers + right_answers_db
                 }).catch((error) => {
@@ -110,12 +120,21 @@ export default class Score extends Component {
                 source={require('../img/background_app.png')}
                 style={styles.bg}>
                 <View style={styles.container}>
-                    <Text>
-                        Questões respondidas: {this.state.total_questions}
-                    </Text>
-                    <Text>
-                        Respostas corretas: {this.state.right_answers}
-                    </Text>
+                    <View style={styles.containerImage}>
+                        <ImageBackground
+                            style={styles.image_score}
+                            source={image}>
+                            <View style={styles.containerResult}>
+                                <Text style={styles.txtResult}>
+                                    {this.state.total_questions}
+                                </Text>
+                                <Text style={styles.txtResult}>
+                                    {this.state.right_answers}
+                                </Text>
+                            </View>
+                        </ImageBackground>
+
+                    </View>
                     <View style={styles.bottom}>
                         <TouchableOpacity
                             style={styles.buttonContinue}
@@ -145,6 +164,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
+    containerImage: {
+        flex: 2,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    containerResult: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginStart: 70,
+        marginTop: 1
+    },
     buttonContinue: {
         alignItems: "center",
         justifyContent: "center",
@@ -162,5 +193,13 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: '#e0e0e0',
         fontWeight: 'bold'
+    },
+    txtResult: {
+        fontSize: 23,
+        color: '#ffffff'
+    },
+    image_score: {
+        width: 330,
+        height: 250
     }
 })

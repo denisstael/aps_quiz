@@ -1,32 +1,66 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Image, ImageBackground } from 'react-native'
-
-const db = require('../../db.json')
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    Image,
+    ImageBackground,
+    Alert,
+    ActivityIndicator
+} from 'react-native'
+import firebase from '../config/firebase'
 
 export default class Subjects extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            isLoading: false
+        }
     }
 
-    static navigationOptions = {
-        title: 'Matérias'
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: 'Matérias',
+            headerLeft: null
+        }
     }
 
     screenQuestions(title, subject) {
+        this.setState({ isLoading: true })
         let data = []
-        if (subject == "Math") {
-            data = db.Math.questions
-        } else if (subject == "Portuguese") {
-            data = db.Portuguese.questions
-        } else if (subject == "History") {
-            data = db.History.questions
-        } else if (subject == "Geography") {
-            data = db.Geography.questions
-        }
-        this.props.navigation.navigate("Questions", { title: title, data: data })
+        let db = undefined
+        firebase.database().ref('Subjects/').once('value', function (snapshot) {
+            db = snapshot.val()
+        }).then(() => {
+            if (subject == "Math") {
+                data = db.Math.questions
+            } else if (subject == "Portuguese") {
+                data = db.Portuguese.questions
+            } else if (subject == "History") {
+                data = db.History.questions
+            } else if (subject == "Geography") {
+                data = db.Geography.questions
+            }
+            this.setState({ isLoading: false })
+            this.props.navigation.navigate("Questions", { title: title, data: data })
+        }).catch(() => { Alert.alert('Erro ao carregar as questões!') })
     }
 
     render() {
+        if (this.state.isLoading) {
+            return (
+                <ImageBackground
+                    imageStyle={{ opacity: 0.2 }}
+                    source={require('../img/background_app.png')}
+                    style={styles.bg}>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <ActivityIndicator size="large" color="#0000ff" />
+                    </View>
+                </ImageBackground>
+            )
+        }
+
         return (
             <ImageBackground
                 imageStyle={{ opacity: 0.2 }}

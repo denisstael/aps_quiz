@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground, ActivityIndicator } from 'react-native'
 import firebase from '../config/firebase'
 import { HeaderBackButton } from 'react-navigation'
 
@@ -33,7 +33,7 @@ export default class TotalScore extends Component {
 
     getScoreFromDatabase() {
         let data = undefined
-        firebase.database().ref().once('value', function (snapshot) {
+        firebase.database().ref('Score/').once('value', function (snapshot) {
             data = snapshot.val()
         }).then(() => {
             if (data != undefined) {
@@ -61,31 +61,31 @@ export default class TotalScore extends Component {
 
     resetScore() {
         this.setState({ status_data: false })
-        firebase.database().ref().once('value', function (snapshot) {
+        firebase.database().ref('Score/').once('value', function (snapshot) {
             let data = snapshot.val()
             if (data != undefined) {
-                firebase.database().ref('math_score/').set({
+                firebase.database().ref('Score/math_score/').set({
                     total: 0,
                     answers: 0
                 }).catch((error) => {
                     Alert.alert('Erro!')
                 })
 
-                firebase.database().ref('portuguese_score/').set({
+                firebase.database().ref('Score/portuguese_score/').set({
                     total: 0,
                     answers: 0
                 }).catch((error) => {
                     Alert.alert('Erro!')
                 })
 
-                firebase.database().ref('history_score/').set({
+                firebase.database().ref('Score/history_score/').set({
                     total: 0,
                     answers: 0
                 }).catch((error) => {
                     Alert.alert('Erro!')
                 })
 
-                firebase.database().ref('geography_score/').set({
+                firebase.database().ref('Score/geography_score/').set({
                     total: 0,
                     answers: 0
                 }).catch((error) => {
@@ -252,10 +252,7 @@ export default class TotalScore extends Component {
         } else {
             scoreData = <View style={styles.container}>
                 <View style={styles.containerRow}>
-                    <Text style={{ color: '#8846f4',fontSize: 30, backgroundColor: '#def7f7',
-                     padding: 10, borderRadius: 10 }}>
-                        Carregando...
-                        </Text>
+                    <ActivityIndicator size="large" color="#0000ff" />
                 </View>
             </View>
         }
@@ -346,7 +343,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         margin: 5,
         color: '#8846f4'
-    },  
+    },
     txtPercentageBad: {
         textAlign: 'center',
         fontSize: 30,

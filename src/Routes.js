@@ -17,5 +17,5 @@ export default createStackNavigator({
             backgroundColor: '#9899ff',
         },
         headerTintColor: '#e0e0e0'
-    }
+    },
 })
