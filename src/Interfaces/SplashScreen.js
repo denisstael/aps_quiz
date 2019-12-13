@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { ImageBackground, StyleSheet } from 'react-native'
 
+//desabiltar os warnings do debug
+console.disableYellowBox = true;
+
 export default class SplashScreen extends Component {
     performTimeConsumingTask = async () => {
         return new Promise((resolve) =>
