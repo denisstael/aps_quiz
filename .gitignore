@@ -24,11 +24,13 @@ DerivedData
 
 # Android/IntelliJ
 #
+android/
 build/
 .idea
 .gradle
 local.properties
 *.iml
+
 
 # node.js
 #
@@ -58,3 +60,6 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+src/config/
+
