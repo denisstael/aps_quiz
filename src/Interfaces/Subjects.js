@@ -9,7 +9,7 @@ import {
     Alert,
     ActivityIndicator
 } from 'react-native'
-import firebase from '../config/firebase'
+import database from '@react-native-firebase/database';
 
 export default class Subjects extends Component {
     constructor(props) {
@@ -30,7 +30,7 @@ export default class Subjects extends Component {
         this.setState({ isLoading: true })
         let data = []
         let db = undefined
-        firebase.database().ref('Subjects/').once('value', function (snapshot) {
+        database().ref('Subjects/').once('value', function (snapshot) {
             db = snapshot.val()
         }).then(() => {
             if (subject == "Math") {

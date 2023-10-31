@@ -1,15 +1,16 @@
-import * as firebase from 'firebase'
+import { initializeApp } from '@react-native-firebase/app';
+import { API_KEY, AUTH_DOMAIN, DATABASE_URL, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID } from "@env"
 
-var firebaseConfig = {
-    apiKey: "AIzaSyD87yPDCp_AnOcqzLK5c9fUcBV-jL88Adc",
-    authDomain: "aps-quiz.firebaseapp.com",
-    databaseURL: "https://aps-quiz.firebaseio.com",
-    projectId: "aps-quiz",
-    storageBucket: "aps-quiz.appspot.com",
-    messagingSenderId: "250155312545",
-    appId: "1:250155312545:web:4b9aa03ada1853f05857e0"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+const firebaseConfig = {
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  databaseURL: DATABASE_URL,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID
+};
 
-  export default firebase
+const firebase = initializeApp(firebaseConfig);
+
+export default firebase;
