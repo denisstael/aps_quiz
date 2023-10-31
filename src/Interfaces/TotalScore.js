@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground, ActivityIndicator } from 'react-native'
-import firebase from '../config/firebase'
-import { HeaderBackButton } from 'react-navigation'
+import database from '@react-native-firebase/database';
+import { HeaderBackButton } from 'react-navigation-stack'
 
 let total_questions_math = null
 let total_answers_math = null
@@ -33,7 +33,7 @@ export default class TotalScore extends Component {
 
     getScoreFromDatabase() {
         let data = undefined
-        firebase.database().ref('Score/').once('value', function (snapshot) {
+        database().ref('Score/').once('value', function (snapshot) {
             data = snapshot.val()
         }).then(() => {
             if (data != undefined) {
@@ -61,31 +61,31 @@ export default class TotalScore extends Component {
 
     resetScore() {
         this.setState({ status_data: false })
-        firebase.database().ref('Score/').once('value', function (snapshot) {
+        database().ref('Score/').once('value', function (snapshot) {
             let data = snapshot.val()
             if (data != undefined) {
-                firebase.database().ref('Score/math_score/').set({
+                database().ref('Score/math_score/').set({
                     total: 0,
                     answers: 0
                 }).catch((error) => {
                     Alert.alert('Erro!')
                 })
 
-                firebase.database().ref('Score/portuguese_score/').set({
+                database().ref('Score/portuguese_score/').set({
                     total: 0,
                     answers: 0
                 }).catch((error) => {
                     Alert.alert('Erro!')
                 })
 
-                firebase.database().ref('Score/history_score/').set({
+                database().ref('Score/history_score/').set({
                     total: 0,
                     answers: 0
                 }).catch((error) => {
                     Alert.alert('Erro!')
                 })
 
-                firebase.database().ref('Score/geography_score/').set({
+                database().ref('Score/geography_score/').set({
                     total: 0,
                     answers: 0
                 }).catch((error) => {

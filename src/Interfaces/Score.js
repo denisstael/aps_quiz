@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Alert, ImageBackground, StyleSheet } from 'react-native'
-import firebase from '../config/firebase'
+import database from '@react-native-firebase/database';
 
 let image = null
 
@@ -43,7 +43,7 @@ export default class Score extends Component {
         let right_answers_db = 0
 
         if (this.props.navigation.state.params.subject == "Matemática") {
-            firebase.database().ref('Score/').once('value', function (snapshot) {
+            database().ref('Score/').once('value', function (snapshot) {
                 let data = snapshot.val()
                 if (data != undefined) {
                     let math_score = data.math_score
@@ -51,7 +51,7 @@ export default class Score extends Component {
                     right_answers_db = math_score.answers
                 }
             }).then(function () {
-                firebase.database().ref('Score/math_score/').set({
+                database().ref('Score/math_score/').set({
                     total: total_questions + total_questions_db,
                     answers: right_answers + right_answers_db
                 }).catch((error) => {
@@ -61,7 +61,7 @@ export default class Score extends Component {
                 Alert.alert('Erro ao salvar os dados!')
             })
         } else if (this.props.navigation.state.params.subject == "Português") {
-            firebase.database().ref('Score/').once('value', function (snapshot) {
+            database().ref('Score/').once('value', function (snapshot) {
                 let data = snapshot.val()
                 if (data != undefined) {
                     let portuguese_score = data.portuguese_score
@@ -69,7 +69,7 @@ export default class Score extends Component {
                     right_answers_db = portuguese_score.answers
                 }
             }).then(function () {
-                firebase.database().ref('Score/portuguese_score/').set({
+                database().ref('Score/portuguese_score/').set({
                     total: total_questions + total_questions_db,
                     answers: right_answers + right_answers_db
                 }).catch((error) => {
@@ -77,7 +77,7 @@ export default class Score extends Component {
                 })
             })
         } else if (this.props.navigation.state.params.subject == "História") {
-            firebase.database().ref('Score/').once('value', function (snapshot) {
+            database().ref('Score/').once('value', function (snapshot) {
                 let data = snapshot.val()
                 if (data != undefined) {
                     let history_score = data.history_score
@@ -85,7 +85,7 @@ export default class Score extends Component {
                     right_answers_db = history_score.answers
                 }
             }).then(function () {
-                firebase.database().ref('Score/history_score/').set({
+                database().ref('Score/history_score/').set({
                     total: total_questions + total_questions_db,
                     answers: right_answers + right_answers_db
                 }).catch((error) => {
@@ -93,7 +93,7 @@ export default class Score extends Component {
                 })
             })
         } else if (this.props.navigation.state.params.subject == "Geografia") {
-            firebase.database().ref('Score/').once('value', function (snapshot) {
+            database().ref('Score/').once('value', function (snapshot) {
                 let data = snapshot.val()
                 if (data != undefined) {
                     let geography_score = data.geography_score
@@ -101,7 +101,7 @@ export default class Score extends Component {
                     right_answers_db = geography_score.answers
                 }
             }).then(function () {
-                firebase.database().ref('Score/geography_score/').set({
+                database().ref('Score/geography_score/').set({
                     total: total_questions + total_questions_db,
                     answers: right_answers + right_answers_db
                 }).catch((error) => {
